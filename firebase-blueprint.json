@@ -1,0 +1,110 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "System users (patients)",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["patient", "doctor", "admin"] },
+        "phone": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "role", "createdAt"]
+    },
+    "Doctor": {
+      "title": "Doctor",
+      "description": "Medical professionals available for consultation",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "specialty": { "type": "string" },
+        "qualifications": { "type": "array", "items": { "type": "string" } },
+        "experience": { "type": "string" },
+        "hospital": { "type": "string" },
+        "fee": { "type": "number" },
+        "rating": { "type": "number" },
+        "totalReviews": { "type": "integer" },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "consultationModes": { "type": "array", "items": { "type": "string" } },
+        "weeklySlots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "day": { "type": "string" },
+              "slots": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "time": { "type": "string" },
+                    "isBooked": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "reviews": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "patientName": { "type": "string" },
+              "rating": { "type": "number" },
+              "comment": { "type": "string" },
+              "date": { "type": "string" }
+            }
+          }
+        },
+        "isAvailable": { "type": "boolean" },
+        "image": { "type": "string" }
+      }
+    },
+    "Appointment": {
+      "title": "Appointment",
+      "description": "Consultation sessions",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "doctorId": { "type": "string" },
+        "doctorName": { "type": "string" },
+        "patientName": { "type": "string" },
+        "scheduledAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["scheduled", "waiting", "in-progress", "completed", "cancelled"] },
+        "consultationMode": { "type": "string" },
+        "queuePosition": { "type": "integer" },
+        "symptoms": { "type": "string" },
+        "fee": { "type": "number" },
+        "paymentStatus": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "EHR": {
+      "title": "EHR",
+      "description": "Electronic Health Records for appointments",
+      "type": "object",
+      "properties": {
+        "appointmentId": { "type": "string" },
+        "patientId": { "type": "string" },
+        "doctorId": { "type": "string" },
+        "vitals": { "type": "object" },
+        "diagnosis": { "type": "object" },
+        "prescriptions": { "type": "array" },
+        "doctorNotes": { "type": "string" },
+        "followUpDate": { "type": "string" },
+        "aiExplanation": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": "User", "description": "User profiles" },
+    "/doctors/{doctorId}": { "schema": "Doctor", "description": "Doctor details" },
+    "/appointments/{appointmentId}": { "schema": "Appointment", "description": "Booking records" },
+    "/ehrs/{ehrId}": { "schema": "EHR", "description": "Medical records" }
+  }
+}
